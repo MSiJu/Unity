@@ -1,0 +1,41 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class MouseMovement : MonoBehaviour
+{
+    public float mouseSensitivity = 100f;
+
+    float xRotation = 0f;
+    float yRotation = 0f;
+
+    public float topClamp = -90f;
+    public float bottomClamp = 90f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //カードルを中央に向けると見えなくなる
+        Cursor.lockState = CursorLockMode.Locked;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        //マウスの入力を取得
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;  //左右
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;  //上下
+
+        //X軸を中心に回転(首の上げ下げ)
+        xRotation -= mouseY;
+
+        //回転制御
+        xRotation = Mathf.Clamp(xRotation, topClamp, bottomClamp);
+
+        //Y軸を中心に回転(首を左右に振る)
+        yRotation += mouseX;
+
+        //回転の適応
+        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+    }
+}
